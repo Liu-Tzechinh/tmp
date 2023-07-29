@@ -108,6 +108,9 @@ void alloc_ref_fail_test(void) {
   CU_ASSERT_EQUAL(allocate_matrix_ref(&mat, from, 0, 0, 0), -1);
   CU_ASSERT_EQUAL(allocate_matrix_ref(&mat, from, 0, 0, 1), -1);
   CU_ASSERT_EQUAL(allocate_matrix_ref(&mat, from, 0, 1, 0), -1);
+  CU_ASSERT_EQUAL(allocate_matrix_ref(&mat, from, 1, 2, -3), -1);
+  CU_ASSERT_EQUAL(allocate_matrix_ref(&mat, from, 1, 10, -1), -1);
+  CU_ASSERT_EQUAL(allocate_matrix_ref(&mat, from, 1, -1, -2), -1);
 }
 
 void alloc_ref_success_test(void) {
@@ -239,6 +242,25 @@ void neg_test(void) {
   }
   neg_matrix(result, mat);
   for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < 2; j++) {
+      CU_ASSERT_EQUAL(get(result, i, j), -(i * 2 + j));
+    }
+  }
+  deallocate_matrix(result);
+  deallocate_matrix(mat);
+
+  CU_ASSERT_EQUAL(allocate_matrix(&result, 3, 2), 0);
+  CU_ASSERT_EQUAL(allocate_matrix(&mat, 3, 2), 0);
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 2; j++) {
+      if (j % 2 == 0)
+        set(mat, i, j, i * 2 + j);
+      else
+        set(mat, i, j, -(i * 2 + j));
+    }
+  }
+  neg_matrix(result, mat);
+  for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 2; j++) {
       CU_ASSERT_EQUAL(get(result, i, j), -(i * 2 + j));
     }
