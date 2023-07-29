@@ -1,4 +1,4 @@
-#include "numc.h"
+#include "dumbpy.h"
 #include <structmember.h>
 
 static PyTypeObject Matrix61cType;
@@ -6,19 +6,19 @@ static PyTypeObject Matrix61cType;
 static int number_methods_err(const char *op, PyObject *args, Matrix61c *self, Matrix61c *other) {
   char err_msg[256];
   if (!PyObject_TypeCheck(self, &Matrix61cType)) {
-    sprintf(err_msg, "numc.matrix does not support %s with other types.", op);
+    sprintf(err_msg, "dumbpy.matrix does not support %s with other types.", op);
     PyErr_SetString(PyExc_TypeError, err_msg);
     return 1;
   }
   if (!PyObject_TypeCheck(args, &Matrix61cType)) {
     if (!PyArg_ParseTuple(args, "0", &other)) {
-      sprintf(err_msg, "numc.matrix does not support %s with other types.", op);
+      sprintf(err_msg, "dumbpy.matrix does not support %s with other types.", op);
       PyErr_SetString(PyExc_TypeError, err_msg);
       return 1;
     }
 
     if (!PyObject_TypeCheck(other, &Matrix61cType)) {
-      sprintf(err_msg, "numc.matrix does not support %s with other types.", op);
+      sprintf(err_msg, "dumbpy.matrix does not support %s with other types.", op);
       PyErr_SetString(PyExc_TypeError, err_msg);
       return 1;
     }
@@ -91,7 +91,7 @@ static int init_1d(PyObject *self, int rows, int cols, PyObject *lst) {
 static int init_2d(PyObject *self, PyObject *lst) {
     int rows = PyList_Size(lst);
     if (rows == 0) {
-        PyErr_SetString(PyExc_ValueError, "Cannot initialize numc.Matrix with an empty list");
+        PyErr_SetString(PyExc_ValueError, "Cannot initialize dumbpy.Matrix with an empty list");
         return -1;
     }
     int cols;
@@ -247,7 +247,7 @@ static PyObject *Matrix61c_class_to_list(Matrix61c *self, PyObject *args) {
     PyObject *mat = NULL;
     if (PyArg_UnpackTuple(args, "args", 1, 1, &mat)) {
         if (!PyObject_TypeCheck(mat, &Matrix61cType)) {
-            PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
+            PyErr_SetString(PyExc_TypeError, "Argument must of type dumbpy.Matrix!");
             return NULL;
         }
         Matrix61c* mat61c = (Matrix61c*)mat;
@@ -260,7 +260,7 @@ static PyObject *Matrix61c_class_to_list(Matrix61c *self, PyObject *args) {
 
 /* Add class methods */
 static PyMethodDef Matrix61c_class_methods[] = {
-    {"to_list", (PyCFunction)Matrix61c_class_to_list, METH_VARARGS, "Returns a list representation of numc.Matrix"},
+    {"to_list", (PyCFunction)Matrix61c_class_to_list, METH_VARARGS, "Returns a list representation of dumbpy.Matrix"},
     {NULL, NULL, 0, NULL}
 };
 
@@ -342,7 +342,7 @@ static PyMappingMethods Matrix61c_mapping = {
 /* NUMBER METHODS */
 
 /*
- * Add the second numc.Matrix (Matrix61c) object to the first one. The first operand is
+ * Add the second dumbpy.Matrix (Matrix61c) object to the first one. The first operand is
  * self, and the second operand can be obtained by casting `args`.
  */
 static PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
@@ -375,7 +375,7 @@ static PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
 }
 
 /*
- * (OPTIONAL) Subtract the second numc.Matrix (Matrix61c) object from the first one. The first operand is
+ * (OPTIONAL) Subtract the second dumbpy.Matrix (Matrix61c) object from the first one. The first operand is
  * self, and the second operand can be obtained by casting `args`.
  */
 static PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
@@ -392,7 +392,7 @@ static PyObject *Matrix61c_multiply(Matrix61c* self, PyObject *args) {
 }
 
 /*
- * (OPTIONAL) Negates the given numc.Matrix.
+ * (OPTIONAL) Negates the given dumbpy.Matrix.
  */
 static PyObject *Matrix61c_neg(Matrix61c* self) {
     /* TODO: YOUR CODE HERE */
@@ -400,14 +400,14 @@ static PyObject *Matrix61c_neg(Matrix61c* self) {
 }
 
 /*
- * Take the element-wise absolute value of this numc.Matrix.
+ * Take the element-wise absolute value of this dumbpy.Matrix.
  */
 static PyObject *Matrix61c_abs(Matrix61c *self) {
     /* TODO: YOUR CODE HERE */
 }
 
 /*
- * Raise numc.Matrix (Matrix61c) to the `pow`th power. You can ignore the argument `optional`.
+ * Raise dumbpy.Matrix (Matrix61c) to the `pow`th power. You can ignore the argument `optional`.
  */
 static PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
     /* TODO: YOUR CODE HERE */
@@ -424,7 +424,7 @@ static PyNumberMethods Matrix61c_as_number = {
 
 /* INSTANCE METHODS */
 /*
- * Given a numc.Matrix self, parse `args` to (int) row, (int) col, and (double/int) val.
+ * Given a dumbpy.Matrix self, parse `args` to (int) row, (int) col, and (double/int) val.
  * This function should return None in Python.
  */
 static PyObject *Matrix61c_set_value(Matrix61c *self, PyObject* args) {
@@ -432,7 +432,7 @@ static PyObject *Matrix61c_set_value(Matrix61c *self, PyObject* args) {
 }
 
 /*
- * Given a numc.Matrix `self`, parse `args` to (int) row and (int) col.
+ * Given a dumbpy.Matrix `self`, parse `args` to (int) row and (int) col.
  * This function should return the value at the `row`th row and `col`th column, which is a Python
  * float.
  */
@@ -460,14 +460,14 @@ static PyMemberDef Matrix61c_members[] = {
 
 static PyTypeObject Matrix61cType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "numc.Matrix",
+    .tp_name = "dumbpy.Matrix",
     .tp_basicsize = sizeof(Matrix61c),
     .tp_dealloc = (destructor)Matrix61c_dealloc,
     .tp_repr = (reprfunc)Matrix61c_repr,
     .tp_as_number = &Matrix61c_as_number,
     .tp_flags = Py_TPFLAGS_DEFAULT |
         Py_TPFLAGS_BASETYPE,
-    .tp_doc = "numc.Matrix objects",
+    .tp_doc = "dumbpy.Matrix objects",
     .tp_methods = Matrix61c_methods,
     .tp_members = Matrix61c_members,
     .tp_as_mapping = &Matrix61c_mapping,
@@ -476,28 +476,28 @@ static PyTypeObject Matrix61cType = {
 };
 
 
-static struct PyModuleDef numcmodule = {
+static struct PyModuleDef dumbpymodule = {
     PyModuleDef_HEAD_INIT,
-    "numc",
-    "Numc matrix operations",
+    "dumbpy",
+    "dumbpy matrix operations",
     -1,
     Matrix61c_class_methods
 };
 
-/* Initialize the numc module */
-PyMODINIT_FUNC PyInit_numc(void) {
+/* Initialize the dumbpy module */
+PyMODINIT_FUNC PyInit_dumbpy(void) {
     PyObject* m;
 
     if (PyType_Ready(&Matrix61cType) < 0)
         return NULL;
 
-    m = PyModule_Create(&numcmodule);
+    m = PyModule_Create(&dumbpymodule);
     if (m == NULL)
         return NULL;
 
     Py_INCREF(&Matrix61cType);
     PyModule_AddObject(m, "Matrix", (PyObject *)&Matrix61cType);
-    printf("CS61C Summer 2021 Project 4: numc imported!\n");
+    printf("CS61C Summer 2021 Project 4: dumbpy imported!\n");
     fflush(stdout);
     return m;
 }
