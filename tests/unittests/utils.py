@@ -16,6 +16,8 @@ Global vars
 """
 num_samples = 1000
 decimal_places = 6
+# for each operation iterate num_iter
+num_iter = 1000
 func_mapping = {
     "add": operator.add,
     "sub": operator.sub,
@@ -62,25 +64,29 @@ def compute(dp_mat_lst: List[Union[dp.Matrix, int]],
         assert(len(dp_mat_lst) == 1)
         assert(len(nc_mat_lst) == 1)
         nc_start = time.time()
-        nc_result = f(nc_mat_lst[0])
+        for _ in range(num_iter):
+            nc_result = f(nc_mat_lst[0])
         nc_end = time.time()
 
         dp_start = time.time()
-        dp_result = f(dp_mat_lst[0])
+        for _ in range(num_iter):
+            dp_result = f(dp_mat_lst[0])
         dp_end = time.time()
     else:
         assert(len(dp_mat_lst) > 1)
         assert(len(nc_mat_lst) > 1)
         nc_start = time.time()
         nc_result = nc_mat_lst[0]
-        for mat in nc_mat_lst[1:]:
-            nc_result = f(nc_result, mat)
+        for _ in range(num_iter):
+            for mat in nc_mat_lst[1:]:
+                nc_result = f(nc_result, mat)
         nc_end = time.time()
 
         dp_start = time.time()
         dp_result = dp_mat_lst[0]
-        for mat in dp_mat_lst[1:]:
-            dp_result = f(dp_result, mat)
+        for _ in range(num_iter):
+            for mat in dp_mat_lst[1:]:
+                dp_result = f(dp_result, mat)
         dp_end = time.time()
     # Check for correctness
     is_correct = cmp_dp_nc_matrix(nc_result, dp_result)

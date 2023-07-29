@@ -4,28 +4,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-// Include SSE intrinsics
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
-#include <immintrin.h>
-#include <x86intrin.h>
-#endif
-
-/* Below are some intel intrinsics that might be useful
- * void _mm256_storeu_pd (double * mem_addr, __m256d a)
- * __m256d _mm256_set1_pd (double a)
- * __m256d _mm256_set_pd (double e3, double e2, double e1, double e0)
- * __m256d _mm256_loadu_pd (double const * mem_addr)
- * __m256d _mm256_add_pd (__m256d a, __m256d b)
- * __m256d _mm256_sub_pd (__m256d a, __m256d b)
- * __m256d _mm256_fmadd_pd (__m256d a, __m256d b, __m256d c)
- * __m256d _mm256_mul_pd (__m256d a, __m256d b)
- * __m256d _mm256_cmp_pd (__m256d a, __m256d b, const int imm8)
- * __m256d _mm256_and_pd (__m256d a, __m256d b)
- * __m256d _mm256_max_pd (__m256d a, __m256d b)
-*/
-
+/* dumbpy */
 /* Generates a random double between low and high */
 double rand_double(double low, double high) {
     double range = (high - low);
@@ -43,6 +22,9 @@ void rand_matrix(matrix *result, unsigned int seed, double low, double high) {
     }
 }
 
+int size(matrix *mat) {
+  return mat->rows * mat->cols;
+}
 /*
  * Returns the double value of the matrix at the given row and column.
  * You may assume `row` and `col` are valid. Note that the matrix is in row-major order.
@@ -116,23 +98,20 @@ void deallocate_matrix(matrix *mat) {
     return;
   }
   // 2. If `mat` has no parent: decrement its `ref_cnt` field by 1. If the `ref_cnt` field becomes 0, then free `mat` and its `data` field.
-  mat->ref_cnt--;
   if (!mat->parent) { // mat is not a slice
+    mat->ref_cnt--;
     if (!mat->ref_cnt) {
       free(mat->data);
       free(mat);
     }
   } 
   // 3. Otherwise, recursively call `deallocate_matrix` on `mat`'s parent, then free `mat`.
-  else {     
-    if (!mat->ref_cnt) { // mat is slice and mat has not child
-      deallocate_matrix(mat->parent);
-      free(mat);
-    } else { // otherwise,  decrease its parent ref_cnt
-      //mat->parent->ref_cnt--;
-    }
+  else {
+    // from spec of summer 2021: Partial slices, however, are not supported
+    // so mat[0][1:3] is impossible.
+    deallocate_matrix(mat->parent);
+    free(mat);
   }
-  
 }
 
 /*
@@ -168,22 +147,50 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int offset, int rows, int co
   new_mat->parent = from;
   // 6. Increment the `ref_cnt` field of the `from` struct by 1.
   from->ref_cnt++;
+  new_mat->ref_cnt = 1;
   // 7. Store the address of the allocated matrix struct at the location `mat` is pointing at.
   *mat = new_mat;
   // 8. Return 0 upon success.
   return 0;
 }
 
+void fill_simd(matrix *mat, double val) {
+  __m256d vals = _mm256_set1_pd(val);
+  int n = size(mat);
+  int i = 0;
+  for (i; i < n / 4 * 4; i += 4) {
+    _mm256_storeu_pd(mat->data+i, vals);
+  }
+  for (i; i < n; i++) {
+    mat->data[i] = val;
+  }
+}
+
+
 /*
  * Sets all entries in mat to val. Note that the matrix is in row-major order.
  */
 void fill_matrix(matrix *mat, double val) {
     // Task 1.5 TODO
-  for (int i = 0; i < mat->rows; i++) {
-    for (int j = 0; j < mat->cols; j++) {
-      set(mat, i, j, val);
-    }
+  fill_simd(mat, val);
+}
+
+
+int abs_simd(matrix *result, matrix *mat) {
+   __m256d _0 = _mm256_set1_pd(0);
+   int n = size(mat);
+  int i = 0;
+  __m256d vals1, vals2;
+  for (i; i < n / 4 * 4; i += 4) {
+    vals1 = _mm256_loadu_pd(mat->data + i);
+    vals2 = _mm_256_sub_pd(_0, vals1);
+    vals1 = _mm_256_max_pd(vals1, vals2);
+    _mm256_storeu_pd(mat->data+i, vals1);
   }
+  for (i; i < n; i++) {
+    mat->data[i] = fabs(mat->data[i]);
+  }
+  return 0;
 }
 
 /*
@@ -193,10 +200,22 @@ void fill_matrix(matrix *mat, double val) {
  */
 int abs_matrix(matrix *result, matrix *mat) {
     // Task 1.5 TODO
-  for (int i = 0; i < mat->rows; i++) {
-    for (int j = 0; j < mat->cols; j++) {
-      set(result, i, j, fabs(get(mat, i, j)));
-    }
+  return abs_simd(result, mat);
+}
+
+int neg_simd(matrix *result, matrix *mat) {
+   __m256d _0 = _mm256_set1_pd(0);
+   int n = size(mat);
+  int i = 0;
+  __m256d vals1, vals2;
+  for (i; i < n / 4 * 4; i += 4) {
+    vals1 = _mm256_loadu_pd(mat->data + i);
+    vals2 = _mm_256_sub_pd(_0, vals1);
+    vals1 = _mm_256_min_pd(vals1, vals2);
+    _mm256_storeu_pd(mat->data+i, vals1);
+  }
+  for (i; i < n; i++) {
+    mat->data[i] = fabs(mat->data[i]);
   }
   return 0;
 }
@@ -209,10 +228,21 @@ int abs_matrix(matrix *result, matrix *mat) {
  */
 int neg_matrix(matrix *result, matrix *mat) {
     // Task 1.5 TODO
-  for (int i = 0; i < mat->rows; i++) {
-    for (int j = 0; j < mat->cols; j++) {
-      set(result, i, j, -fabs(get(mat, i, j)));
-    }
+  return neg_simd(result, mat);
+}
+
+int add_simd(matrix *result, matrix *mat1, matrix *mat2) {
+  int n = size(mat);
+  int i = 0;
+  __m256d vals1, vals2, sum;
+  for (i; i < n / 4 * 4; i += 4) {
+    vals1 = _mm256_loadu_pd(mat1->data + i);
+    vals2 = _mm256_loadu_pd(mat2->data + i);
+    sum = _mm_256_add_pd(vals1, vals2);
+    _mm256_storeu_pd(result->data+i, sum);
+  }
+  for (i; i < n; i++) {
+    result->data[i] = vals1->data[i] + vals2->data[i];
   }
   return 0;
 }
@@ -223,33 +253,28 @@ int neg_matrix(matrix *result, matrix *mat) {
  * You may assume `mat1` and `mat2` have the same dimensions.
  * Note that the matrix is in row-major order.
  */
-int __add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-    // Task 1.5 TODO
-  for (int i = 0; i < mat1->rows; i++) {
-    for (int j = 0; j < mat1->cols; j++) {
-      set(result, i, j, get(mat1, i, j) + get(mat2, i, j));
-    }
-  }
-  return 0;
-}
-
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     // Task 1.5 TODO
-  __m256d sum = _mm256_set1_pd(0);
-  int n = mat1->cols * mat1->rows;
-  for (int i = 0; i < n / 4 * 4; i += 4) {
-    __m256d tmp1 = _mm256_loadu_pd(mat1->data + i);
-    __m256d tmp2 = _mm256_loadu_pd(mat2->data + i);
-    sum = _mm256_add_pd(tmp1, tmp2);
-    _mm256_storeu_pd(result->data + i, sum);
-  }
+  return add_simd(result, mat1, mat2);
+}
 
-  for (int i = n / 4 * 4; i < n; i++) {
-    result->data[i] = mat1->data[i] + mat2->data[i];
+
+
+int sub_simd(matrix *result, matrix *mat1, matrix *mat2) {
+  int n = size(mat1);
+  int i = 0;
+  __m256d vals1, vals2, sub;
+  for (i; i < n / 4 * 4; i += 4) {
+    vals1 = _mm256_loadu_pd(mat1->data + i);
+    vals2 = _mm256_loadu_pd(mat2->data + i);
+    sub = _mm_256_sub_pd(vals1, vals2);
+    _mm256_storeu_pd(result->data+i, sub);
+  }
+  for (i; i < n; i++) {
+    result->data[i] = vals1->data[i] + vals2->data[i];
   }
   return 0;
 }
-
 /*
  * (OPTIONAL)
  * Store the result of subtracting mat2 from mat1 to `result`.
@@ -259,9 +284,77 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     // Task 1.5 TODO
+  return sub_simd(result, mat1, mat2);
+}
+
+void transpose_simd(matrix *result, matrix *mat) {
+  double e1, e2, e3, e4;
+  int n = size(result);
+  rows = mat->rows;
+  cols = mat->cols;
+  int row = -1;
+  int col = -1;
+  __mm256d val = _mm256_set1_pd(0);
+  int k = 0;
+  for (k; k < n / 4 * 4; k += 4) {
+    row = (row + 1) % rows;
+    if (!row) { 
+      col++;
+    }
+    e1 = mat2->data[row * cols + col];
+    row = (row + 1) % rows;
+    if (!row) {
+      col++;
+    }
+    e2 = mat2->data[row * cols + col];
+    row = (row + 1) % rows;
+    if (!row) {
+      col++;
+    }
+    e3 = mat2->data[row * cols + col];
+    row = (row + 1) % rows;
+    if (!row) {
+      col++;
+    }
+    e4 = mat2->data[row * cols + col];
+    val = _mm256_set_pd(e1, e2, e3, e4);
+    _mm256_storeu_pd(result->data + k, val);
+  }
+  for (k; k < n; k++) {
+    row = (row + 1) % rows;
+    if (!row) {
+      col++;
+    }
+    result->data[k] = mat2->data[row * cols + col];
+  }
+}
+
+
+
+int mul_simd(matrix *result, matrix *mat1, matrix *mat2) {
+  // transpose mat2
+  matrix *tmp;
+  if (allocate_matrix(&tmp, mat2->cols; mat2->rows)) {
+    return -1;
+  }
+  transpose_simd(tmp, mat2);
+
+  _mm256d vals1, vals2, vals3;
+  int j;
+  double sum_array[4];// __attribute__ ((aligned(32)));
   for (int i = 0; i < mat1->rows; i++) {
-    for (int j = 0; j < mat1->cols; j++) {
-      set(result, i, j, get(mat1, i, j) - get(mat2, i, j));
+    for (int k = 0; k < tmp->rows; k++) {
+      vals3 = _m256d_set1_pd(0);
+      for (j = 0; j < mat1->cols / 4 * 4; j += 4) {
+	vals1 = _mm256d_loadu_pd(i * mat1->cols + j);
+	vals2 = _mm256d_loadu_pd(k * tmp->cols + j);
+	vals3 = _mm256_fmadd_pd(vals1, vals2, vals3);
+      }
+      _mm256_storeu_pd(sum_array, vals3);
+      result->data[i * mat2->cols + k] = sum_array[0] + sum_array[1] + sum_array[2] + sum_array[3];
+      for (j; j < mat1->cols; j++) {
+	result->data[i * mat2->cols + k] += (mat1->data[i * mat1->cols + j] * tmp->data[k * tmp->cols + j]);
+      }
     }
   }
   return 0;
@@ -276,16 +369,7 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     // Task 1.6 TODO
-  for (int i = 0; i < mat1->rows; i++) {
-    for (int k = 0; k < mat2->cols; k++) {
-      double sum = 0;
-      for (int j = 0; j < mat1->cols; j++) {
-	sum += get(mat1, i, j) * get(mat2, j, k);
-      }
-      set(result, i, k, sum);
-    }
-  }
-  return 0;
+  return mul_simd;
 }
 
 /*
@@ -299,7 +383,7 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
   // Task 1.6 TODO
   double value = 0;
   for (int i = 0; i < mat->rows; i++) {
-    for (int j = 0; j < mat->cols; j++) {    
+    for (int j = 0; j < mat->cols; j++) {
       if (i == j) {
 	value = 1;
       } else {
@@ -313,7 +397,7 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
   for (int k = 0; k < pow; k++) {
     mul_matrix(tmp, result, mat);
     for (int i = 0; i < mat->rows; i++) {
-      for (int j = 0; j < mat->cols; j++) {    
+      for (int j = 0; j < mat->cols; j++) {
 	set(result, i, j, get(tmp, i, j));
       }
     }
