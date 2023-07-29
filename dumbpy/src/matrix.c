@@ -4,28 +4,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-// Include SSE intrinsics
-#if defined(_MSC_VER)
-#include <intrin.h>
-#elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
-#include <immintrin.h>
-#include <x86intrin.h>
-#endif
-
-/* Below are some intel intrinsics that might be useful
- * void _mm256_storeu_pd (double * mem_addr, __m256d a)
- * __m256d _mm256_set1_pd (double a)
- * __m256d _mm256_set_pd (double e3, double e2, double e1, double e0)
- * __m256d _mm256_loadu_pd (double const * mem_addr)
- * __m256d _mm256_add_pd (__m256d a, __m256d b)
- * __m256d _mm256_sub_pd (__m256d a, __m256d b)
- * __m256d _mm256_fmadd_pd (__m256d a, __m256d b, __m256d c)
- * __m256d _mm256_mul_pd (__m256d a, __m256d b)
- * __m256d _mm256_cmp_pd (__m256d a, __m256d b, const int imm8)
- * __m256d _mm256_and_pd (__m256d a, __m256d b)
- * __m256d _mm256_max_pd (__m256d a, __m256d b)
-*/
-
+/* dumbpy */
 /* Generates a random double between low and high */
 double rand_double(double low, double high) {
     double range = (high - low);
@@ -116,23 +95,20 @@ void deallocate_matrix(matrix *mat) {
     return;
   }
   // 2. If `mat` has no parent: decrement its `ref_cnt` field by 1. If the `ref_cnt` field becomes 0, then free `mat` and its `data` field.
-  mat->ref_cnt--;
   if (!mat->parent) { // mat is not a slice
+    mat->ref_cnt--;
     if (!mat->ref_cnt) {
       free(mat->data);
       free(mat);
     }
   } 
   // 3. Otherwise, recursively call `deallocate_matrix` on `mat`'s parent, then free `mat`.
-  else {     
-    if (!mat->ref_cnt) { // mat is slice and mat has not child
-      deallocate_matrix(mat->parent);
-      free(mat);
-    } else { // otherwise,  decrease its parent ref_cnt
-      //mat->parent->ref_cnt--;
-    }
+  else {
+    // from spec of summer 2021: Partial slices, however, are not supported
+    // so mat[0][1:3] is impossible.
+    deallocate_matrix(mat->parent);
+    free(mat);
   }
-  
 }
 
 /*
@@ -168,6 +144,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int offset, int rows, int co
   new_mat->parent = from;
   // 6. Increment the `ref_cnt` field of the `from` struct by 1.
   from->ref_cnt++;
+  new_mat->ref_cnt = 1;
   // 7. Store the address of the allocated matrix struct at the location `mat` is pointing at.
   *mat = new_mat;
   // 8. Return 0 upon success.
@@ -223,7 +200,7 @@ int neg_matrix(matrix *result, matrix *mat) {
  * You may assume `mat1` and `mat2` have the same dimensions.
  * Note that the matrix is in row-major order.
  */
-int __add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
+int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     // Task 1.5 TODO
   for (int i = 0; i < mat1->rows; i++) {
     for (int j = 0; j < mat1->cols; j++) {
@@ -233,22 +210,6 @@ int __add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
   return 0;
 }
 
-int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-    // Task 1.5 TODO
-  __m256d sum = _mm256_set1_pd(0);
-  int n = mat1->cols * mat1->rows;
-  for (int i = 0; i < n / 4 * 4; i += 4) {
-    __m256d tmp1 = _mm256_loadu_pd(mat1->data + i);
-    __m256d tmp2 = _mm256_loadu_pd(mat2->data + i);
-    sum = _mm256_add_pd(tmp1, tmp2);
-    _mm256_storeu_pd(result->data + i, sum);
-  }
-
-  for (int i = n / 4 * 4; i < n; i++) {
-    result->data[i] = mat1->data[i] + mat2->data[i];
-  }
-  return 0;
-}
 
 /*
  * (OPTIONAL)
