@@ -15,12 +15,10 @@ double rand_double(double low, double high) {
 /* Generates a random matrix */
 void rand_matrix(matrix *result, unsigned int seed, double low, double high) {
     srand(seed);
-    int rows = result->rows;
-    int cols = result->cols;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-	  //            set(result, i, j, rand_double(low, high));
-	  result->data[i * cols + j] = rand_double(low, high);
+    for (int i = 0; i < result->rows; i++) {
+      for (int j = 0; j < result->cols; j++) {
+	//            set(result, i, j, rand_double(low, high));
+	result->data[i * result->cols + j] = rand_double(low, high);
         }
     }
 }
@@ -158,7 +156,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int offset, int rows, int co
  * Sets all entries in mat to val. Note that the matrix is in row-major order.
  */
 void fill_matrix(matrix *mat, double val) {
-    // Task 1.5 TODO
+  // Task 1.5 TODO
   for (int i = 0; i < mat->rows; i++) {
     for (int j = 0; j < mat->cols; j++) {
       set(mat, i, j, val);

@@ -99,48 +99,38 @@ class TestAdd(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-#    def test_large_add_4096(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(4096, 4096, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(4096, 4096, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#    def test_large_add_8192(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#    def test_large_add_16384(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#    def test_large_add_32768(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_add_65536(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(65536, 65536, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(65536, 65536, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
+    def test_large_add_4096(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(4096, 4096, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(4096, 4096, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_add_8192(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_add_16384(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_add_32768(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
 # (OPTIONAL) Uncomment the following TestSub class if you have implemented matrix subtraction.
 class TestSub(TestCase):
     def test_small_sub_2(self):
@@ -189,7 +179,7 @@ class TestSub(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-    def test_medium_sub_32(self):
+    def test_small_sub_32(self):
         # TODO: YOUR CODE HERE
         dp_mat1, nc_mat1 = rand_dp_nc_matrix(32, 32, seed=0)
         dp_mat2, nc_mat2 = rand_dp_nc_matrix(32, 32, seed=1)
@@ -254,39 +244,31 @@ class TestSub(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-#    def test_large_sub_8192(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_sub_16384(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#    def test_large_sub_32768(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_sub_65536(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(65536, 65536, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(65536, 65536, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
+    def test_large_sub_8192(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+
+    def test_large_sub_16384(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_sub_32768(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "sub")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
 
 class TestAbs(TestCase):
     def test_small_abs_2(self):
@@ -296,14 +278,212 @@ class TestAbs(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-    def test_medium_abs(self):
+    def test_small_abs_4(self):
         # TODO: YOUR CODE HERE
-        pass
+        dp_mat, nc_mat = rand_dp_nc_matrix(4, 4, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
-    def test_large_abs(self):
+    def test_small_abs_8(self):
         # TODO: YOUR CODE HERE
-        pass
+        dp_mat, nc_mat = rand_dp_nc_matrix(8, 8, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
+    def test_small_abs_16(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(16, 16, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_small_abs_32(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(32, 32, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_medium_abs_64(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(64, 64, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_medium_abs_128(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(128, 128, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_medium_abs_256(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(256, 256, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_medium_abs_512(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_medium_abs_1024(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_abs_2048(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(2048, 2048, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_abs_4096(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(4096, 4096, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_abs_8192(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(8192, 8192, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_abs_16384(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(16384, 16384, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_abs_32768(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(32768, 32768, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "abs")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+
+class TestTran(TestCase):
+    def test_small_tran_2(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(2, 2, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_small_tran_4(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(4, 4, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_small_tran_8(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(8, 8, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_small_tran_16(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(16, 16, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_small_tran_32(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(32, 32, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_medium_tran_64(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(64, 64, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_medium_tran_128(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(128, 128, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_medium_tran_256(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(256, 256, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_medium_tran_512(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_medium_tran_1024(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_tran_2048(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(2048, 2048, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_tran_4096(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(4096, 4096, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_tran_8192(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(8192, 8192, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_tran_16384(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(16384, 16384, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+        
+    def test_large_tran_32768(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(32768, 32768, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+        
 # (OPTIONAL) Uncomment the following TestNeg class if you have implemented matrix negation.
 # class TestNeg(TestCase):
 #    def test_small_neg(self):
@@ -329,13 +509,6 @@ class TestMul(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-    def test_medium_mul(self):
-        # TODO: YOUR CODE HERE
-        pass
-
-    def test_large_mul(self):
-        # TODO: YOUR CODE HERE
-        pass
     def test_small_mul_4(self):
         # TODO: YOUR CODE HERE
         dp_mat1, nc_mat1 = rand_dp_nc_matrix(4, 4, seed=0)
@@ -426,39 +599,30 @@ class TestMul(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-#    def test_large_mul_8192(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_mul_16384(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#    def test_large_mul_32768(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_mul_65536(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(65536, 65536, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(65536, 65536, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
+    def test_large_mul_8192(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+
+    def test_large_mul_16384(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_mul_32768(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
 class TestPow(TestCase):
     def test_small_pow_2(self):
@@ -468,13 +632,6 @@ class TestPow(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-    def test_medium_pow(self):
-        # TODO: YOUR CODE HERE
-        pass
-
-    def test_large_pow(self):
-        # TODO: YOUR CODE HERE
-        pass
     def test_small_pow_4(self):
         # TODO: YOUR CODE HERE
         dp_mat1, nc_mat1 = rand_dp_nc_matrix(4, 4, seed=0)
@@ -565,40 +722,33 @@ class TestPow(TestCase):
         self.assertTrue(is_correct)
         print_speedup(speed_up)
 
-#    def test_large_pow_8192(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_pow_16384(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#    def test_large_pow_32768(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
-#
-#    def test_large_pow_65536(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(65536, 65536, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(65536, 65536, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
-#        self.assertTrue(is_correct)
-#        print_speedup(speed_up)
-#
+    def test_large_pow_8192(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(8192, 8192, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+
+    def test_large_pow_16384(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(16384, 16384, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(16384, 16384, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+    def test_large_pow_32768(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(32768, 32768, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(32768, 32768, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "pow")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
+
+
+
 #class TestGet(TestCase):
 #    def test_get(self):
 #        # TODO: YOUR CODE HERE

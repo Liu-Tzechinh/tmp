@@ -17,14 +17,15 @@ Global vars
 num_samples = 1000
 decimal_places = 6
 # for each operation iterate num_iter
-num_iter = 1
+num_iter = 64
 func_mapping = {
     "add": operator.add,
     "sub": operator.sub,
     "mul": operator.mul,
     "neg": operator.neg,
     "abs": operator.abs,
-    "pow": operator.pow
+    "pow": operator.pow,
+    "tran": operator.invert
 }
 """
 Returns a dumbpy matrix and a numc matrix with the same data
@@ -60,7 +61,7 @@ def compute(dp_mat_lst: List[Union[dp.Matrix, int]],
     nc_start, nc_end, dp_start, dp_end = None, None, None, None
     nc_result, dp_result = None, None
     assert(op in list(func_mapping.keys()))
-    if op == "neg" or op == "abs":
+    if op == "neg" or op == "abs" or op == "tran":
         assert(len(dp_mat_lst) == 1)
         assert(len(nc_mat_lst) == 1)
         nc_start = time.time()

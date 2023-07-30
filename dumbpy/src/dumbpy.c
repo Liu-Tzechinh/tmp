@@ -466,6 +466,19 @@ static PyObject *Matrix61c_neg(Matrix61c* self) {
   return op_err(new_mat, neg_result);
 }
 
+static PyObject *Matrix_tran(Matrix61c *self) {
+  matrix *new_mat;
+  int alloc_failed = allocate_matrix(&new_mat, self->mat->rows, self->mat->cols);
+  if (alloc_failed == -1){
+    PyErr_SetString(PyExc_ValueError, "Dimensions must be positive");
+    return NULL;
+  }else if (alloc_failed == -2){
+    PyErr_SetString(PyExc_RuntimeError, "Failed to allocate matrix");
+    return NULL;
+  }
+  int tran_result = tran_matrix(new_mat, self->mat);
+  return op_err(new_mat, tran_result);
+}
 /*
  * Take the element-wise absolute value of this dumbpy.Matrix.
  */
@@ -527,6 +540,7 @@ static PyNumberMethods Matrix61c_as_number = {
   .nb_power = (ternaryfunc)Matrix61c_pow, // ternaryfunc nb_power;
   .nb_negative = (unaryfunc)Matrix61c_neg, // unaryfunc nb_negative;
   .nb_absolute = (unaryfunc)Matrix61c_abs, // unaryfunc nb_absolute;
+  .nb_invert = (unaryfunc)Matrix61c_tran, // unaryfunc nb_invert
 };
 
 
@@ -583,7 +597,6 @@ static PyMethodDef Matrix61c_methods[] = {
    "Change the value at a specific row and column index"},
   {"get", (PyCFunction)Matrix61c_get_value, METH_VARARGS,
    "get the value at a specific row and col index"},
-  
     {NULL, NULL, 0, NULL}
 };
 
