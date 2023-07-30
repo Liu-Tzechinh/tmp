@@ -154,7 +154,7 @@ class TestAdd(TestCase):
 
 # (OPTIONAL) Uncomment the following TestSub class if you have implemented matrix subtraction.
 class TestSub(TestCase):
-        def test_small_sub_2(self):
+    def test_small_sub_2(self):
         # TODO: YOUR CODE HERE
         dp_mat1, nc_mat1 = rand_dp_nc_matrix(2, 2, seed=0)
         dp_mat2, nc_mat2 = rand_dp_nc_matrix(2, 2, seed=1)
@@ -419,7 +419,7 @@ class TestAbs(TestCase):
 
 
 class TestTran(TestCase):
-        def test_small_tran_2(self):
+    def test_small_tran_2(self):
         # TODO: YOUR CODE HERE
         dp_mat, nc_mat = rand_dp_nc_matrix(2, 2, seed=0)
         is_correct, speed_up = compute([dp_mat], [nc_mat], "tran")
@@ -541,7 +541,7 @@ class TestTran(TestCase):
         
 # (OPTIONAL) Uncomment the following TestNeg class if you have implemented matrix negation.
 class TestNeg(TestCase):
-        def test_small_neg_2(self):
+    def test_small_neg_2(self):
         # TODO: YOUR CODE HERE
         dp_mat, nc_mat = rand_dp_nc_matrix(2, 2, seed=0)
         is_correct, speed_up = compute([dp_mat], [nc_mat], "neg")
@@ -661,7 +661,7 @@ class TestNeg(TestCase):
         print_speedup(speed_up)
 
 class TestMul(TestCase):
-        def test_small_mul_2(self):
+    def test_small_mul_2(self):
         # TODO: YOUR CODE HERE
         dp_mat1, nc_mat1 = rand_dp_nc_matrix(2, 2, seed=0)
         dp_mat2, nc_mat2 = rand_dp_nc_matrix(2, 2, seed=1)
@@ -1007,7 +1007,7 @@ class TestPow(TestCase):
         print("test_medium_pow_256_16")
         print_speedup(speed_up)
 
-     def test_medium_pow_512_4(self):
+    def test_medium_pow_512_4(self):
         # TODO: YOUR CODE HERE
         dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
         is_correct, speed_up = compute([dp_mat, 4], [nc_mat, 4], "pow")
