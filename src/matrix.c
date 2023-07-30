@@ -10,7 +10,7 @@
  * optimization 2: _simd
  * optimization 3: openMp bsed on nfd or nnfd
  */
-#define OPTION 3
+#define OPTION 1
 
 // Include SSE intrinsics
 #if defined(_MSC_VER)
