@@ -466,9 +466,9 @@ static PyObject *Matrix61c_neg(Matrix61c* self) {
   return op_err(new_mat, neg_result);
 }
 
-static PyObject *Matrix_tran(Matrix61c *self) {
+static PyObject *Matrix61c_tran(Matrix61c *self) {
   matrix *new_mat;
-  int alloc_failed = allocate_matrix(&new_mat, self->mat->rows, self->mat->cols);
+  int alloc_failed = allocate_matrix(&new_mat, self->mat->cols, self->mat->rows);
   if (alloc_failed == -1){
     PyErr_SetString(PyExc_ValueError, "Dimensions must be positive");
     return NULL;
@@ -598,6 +598,8 @@ static PyMethodDef Matrix61c_methods[] = {
    "Change the value at a specific row and column index"},
   {"get", (PyCFunction)Matrix61c_get_value, METH_VARARGS,
    "get the value at a specific row and col index"},
+  {"tran", (PyCFunction)Matrix61c_tran, METH_NOARGS,
+   "transpose the matrix"},
     {NULL, NULL, 0, NULL}
 };
 

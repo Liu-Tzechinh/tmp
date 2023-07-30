@@ -170,11 +170,18 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int offset, int rows, int co
   return 0;
 }
 
-void fill_nfd(matrix *mat, double val) {
+void fill_nnfd(matrix *mat, double val) {
   for (int i = 0; i < mat->rows; i++) {
     for (int j = 0; j < mat->cols; j++) {
-      mat->data[i * mat->cols + j] = vals;
+      mat->data[i * mat->cols + j] = val;
     }
+  }
+}
+
+void fill_nfd(matrix *mat, double val) {
+  int n = size(mat);
+  for (int i = 0; i < n; i++) {
+    mat->data[i] = val;
   }
 }
 
@@ -189,7 +196,6 @@ void fill_simd(matrix *mat, double val) {
   }
 }
 
-
 /*
  * Sets all entries in mat to val. Note that the matrix is in row-major order.
  */
@@ -199,14 +205,25 @@ void fill_matrix(matrix *mat, double val) {
 }
 
 
-int abs_nfd(matrix *result, matrix *mat) {
+int abs_nnfd(matrix *result, matrix *mat) {
+  int index;
   for (int i = 0; i < mat->rows; i++) {
     for (int j = 0; j < mat->cols; j++) {
-      result->data[i * mat->cols + j] = fabs(mat->data[i * mat->cols + j]);
+      index = i * mat->cols + j;
+      result->data[index] = fabs(mat->data[index]);
     }
   }
   return 0;
 }
+
+int abs_nfd(matrix *result, matrix *mat) {
+  int n = size(mat);
+  for (int i = 0; i < n; i++) {
+    result->data[i] = fabs(mat->data[i]);
+  }
+  return 0;
+}
+
 int abs_simd(matrix *result, matrix *mat) {
    __m256d _0 = _mm256_set1_pd(0);
    int n = size(mat);
@@ -232,11 +249,32 @@ int abs_matrix(matrix *result, matrix *mat) {
     // Task 1.5 TODO
   switch (OPTION) {
   case 0:
-    return abs_nfd(result, mat);
+    return abs_nnfd(result, mat);
   case 1:
+    return abs_nfd(result, mat);
+  case 2:
     return abs_simd(result, mat);
   }
 }
+
+int neg_nnfd(matrix *result, matrix *mat) {
+  int index;
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      index = i * mat->cols + j;
+      result->data[index] = -fabs(mat->data[index]);
+    }
+  }
+}
+
+int neg_nfd(matrix *result, matrix *mat) {
+  int n = size(mat);
+  for (int i = 0; i < n; i++) {
+    result->data[i] = -fabs(mat->data[i]);
+    }
+  }
+}
+
 
 int neg_simd(matrix *result, matrix *mat) {
    __m256d _0 = _mm256_set1_pd(0);
@@ -262,14 +300,21 @@ int neg_simd(matrix *result, matrix *mat) {
  */
 int neg_matrix(matrix *result, matrix *mat) {
     // Task 1.5 TODO
-  return neg_simd(result, mat);
+  switch (OPTION) {
+  case 0:
+    return neg_nnfd(result, mat);
+  case 1:
+    return neg_nfd(result, mat);
+  case 2:
+    return neg_simd(result, mat);
+  }
 }
 
 int add_nnfd(matrix *result, matrix *mat1, matrix *mat2) {
   int index;
   for (int i = 0; i < mat1->rows; i++) {
     for (int j = 0; j < mat1->cols; j++) {
-      index = i * mat->cols + j;
+      index = i * mat1->cols + j;
       result->data[index] = mat1->data[index] + mat2->data[index];
     }
   }
@@ -281,6 +326,7 @@ int add_nfd(matrix *result, matrix *mat1, matrix *mat2) {
   for (int i = 0; i < n; i++) {
     result->data[i] = mat1->data[i] + mat2->data[i];
   }
+  return 0;
 }
 
 int add_simd(matrix *result, matrix *mat1, matrix *mat2) {
@@ -304,6 +350,7 @@ int add_nfd_mp(matrix *result, matrix *mat1, matrix *mat2) {
   for (int i = 0; i < n; i++) {
     result->data[i] = mat1->data[i] + mat2->data[i];
   }
+  return 0;
 }
 
 int add_simd_mp(matrix *result, matrix *mat1, matrix *mat2) {
@@ -340,6 +387,26 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
   }
 }
 
+int sub_nnfd(matrix *result, matrix *mat1, matrix *mat2) {
+  // Task 1.5 TODO
+  int index;
+  for (int i = 0; i < mat1->rows; i++) {
+    for (int j = 0; j < mat1->cols; j++) {
+      index = i * mat1->cols + j;
+      result->data[index] = mat1->data[index] - mat2->data[index];
+    }
+  }
+  return 0;
+}
+
+int sub_nfd(matrix *result, matrix *mat1, matrix *mat2) {
+  // Task 1.5 TODO
+  int n = size(result);
+  for (int i = 0; i < n; i++) {
+    result->data[i] = mat1->data[i] - mat2->data[i];
+  }
+  return 0;
+}
 
 
 int sub_simd(matrix *result, matrix *mat1, matrix *mat2) {
@@ -364,9 +431,27 @@ int sub_simd(matrix *result, matrix *mat1, matrix *mat2) {
  * Note that the matrix is in row-major order.
  */
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-    // Task 1.5 TODO
-  return sub_simd(result, mat1, mat2);
+  // Task 1.5 TODO
+  switch(OPTION) {
+  case 0:
+    return sub_nnfd(result, mat1, mat2);
+  case 1:
+    return sub_nfd(result, mat1, mat2);
+  case 2:
+    return sub_simd(result, mat1, mat2);
+  }
 }
+
+int tran_nnfd(matrix *result, matrix *mat) {
+  int index;
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      result->data[j * result->cols + i] = mat->data[i * mat->cols + j];
+    }
+  }
+  return 0;
+}
+
 
 int tran_simd(matrix *result, matrix *mat) {
   double e1, e2, e3, e4;
@@ -411,9 +496,25 @@ int tran_simd(matrix *result, matrix *mat) {
 }
 
 int tran_matrix(matrix *result, matrix *mat) {
-  for (int i = 0; i < mat->rows; i++) {
-    for (int j = 0; j < mat->cols; j++) {
-      set(result, j, i, get(mat, i, j));
+  switch(OPTION) {
+  case 0:
+    return tran_nnfd(result, mat1, mat2);
+  case 1:
+    return tran_nfd(result, mat1, mat2);
+  case 2:
+    return tran_simd(result, mat1, mat2);
+  }
+}
+
+int mul_nnfd(matrix *result, matrix *mat1, matrix *mat2) {
+    // Task 1.6 TODO
+  for (int i = 0; i < mat1->rows; i++) {
+    for (int k = 0; k < mat2->cols; k++) {
+      double sum = 0;
+      for (int j = 0; j < mat1->cols; j++) {
+	sum += (mat1->data[i * mat1->cols + j] * mat2->data[j * mat2->cols + k]);
+      }
+      result->data[i $ result->cols + k] = sum;
     }
   }
   return 0;
@@ -455,8 +556,14 @@ int mul_simd(matrix *result, matrix *mat1, matrix *mat2) {
  * Note that the matrix is in row-major order.
  */
 int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
-    // Task 1.6 TODO
-  return mul_simd(result, mat1, mat2);
+  switch(OPTION) {
+  case 0:
+    return mul_nnfd(result, mat1, mat2);
+  case 1:
+    return mul_nnfd(result, mat1, mat2);
+  case 2:
+    return mul_simd(result, mat1, mat2);
+  }
 }
 
 /*

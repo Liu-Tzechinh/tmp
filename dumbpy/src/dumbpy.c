@@ -468,7 +468,7 @@ static PyObject *Matrix61c_neg(Matrix61c* self) {
 
 static PyObject *Matrix61c_tran(Matrix61c *self) {
   matrix *new_mat;
-  int alloc_failed = allocate_matrix(&new_mat, self->mat->rows, self->mat->cols);
+  int alloc_failed = allocate_matrix(&new_mat, self->mat->cols, self->mat->rows);
   if (alloc_failed == -1){
     PyErr_SetString(PyExc_ValueError, "Dimensions must be positive");
     return NULL;
