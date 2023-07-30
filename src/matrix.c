@@ -10,7 +10,7 @@
  * optimization 2: _simd
  * optimization 3: openMp bsed on nfd or nnfd
  */
-#define OPTION 2
+#define OPTION 3
 
 // Include SSE intrinsics
 #if defined(_MSC_VER)
@@ -296,7 +296,7 @@ int neg_nfd(matrix *result, matrix *mat) {
   return 0;
 }
 
-int neg_nfd(matrix *result, matrix *mat) {
+int neg_nfd_mp(matrix *result, matrix *mat) {
   int n = size(mat);
 #pragma omp parallel for
   for (int i = 0; i < n; i++) {
@@ -540,7 +540,8 @@ int tran_simd(matrix *result, matrix *mat) {
       col++;
     }
     e4 = mat->data[row * cols + col];
-    val = _mm256_set_pd(e1, e2, e3, e4);
+    // This may be a bug, may be depend on the machine big eddian or littl edian!
+    val = _mm256_set_pd(e4, e3, e2, e1);
     _mm256_storeu_pd(result->data + k, val);
   }
   for (int k = n / 4 * 4; k < n; k++) {
@@ -673,7 +674,7 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
     mul_matrix(tmp, result, mat);
     for (int i = 0; i < mat->rows; i++) {
       for (int j = 0; j < mat->cols; j++) {
-	result->data[i * result->cols + j] = tmp->data[i * tmp->cols = j];
+	result->data[i * result->cols + j] = tmp->data[i * tmp->cols + j];
       }
     }
   }
