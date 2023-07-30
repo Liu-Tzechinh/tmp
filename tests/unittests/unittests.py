@@ -768,15 +768,15 @@ class TestMul(TestCase):
         print("test_large_mul_2048")
         print_speedup(speed_up)
 
-#    def test_large_mul_4096(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat1, nc_mat1 = rand_dp_nc_matrix(4096, 4096, seed=0)
-#        dp_mat2, nc_mat2 = rand_dp_nc_matrix(4096, 4096, seed=1)
-#        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
-#        self.assertTrue(is_correct)
-#        print("test_large_mul_4096")
-#        print_speedup(speed_up)
-#
+    def test_large_mul_4096(self):
+        # TODO: YOUR CODE HERE
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(4096, 4096, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(4096, 4096, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
+        self.assertTrue(is_correct)
+        print("test_large_mul_4096")
+        print_speedup(speed_up)
+
 #    def test_large_mul_8192(self):
 #        # TODO: YOUR CODE HERE
 #        dp_mat1, nc_mat1 = rand_dp_nc_matrix(8192, 8192, seed=0)
@@ -1007,56 +1007,56 @@ class TestPow(TestCase):
         print("test_medium_pow_256_16")
         print_speedup(speed_up)
 
-#     def test_medium_pow_512_4(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
-#        is_correct, speed_up = compute([dp_mat, 4], [nc_mat, 4], "pow")
-#        self.assertTrue(is_correct)
-#        print("test_medium_pow_512_4")
-#        print_speedup(speed_up)
-#
-#    def test_medium_pow_512_8(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
-#        is_correct, speed_up = compute([dp_mat, 8], [nc_mat, 8], "pow")
-#        self.assertTrue(is_correct)
-#        print("test_medium_pow_512_8")
-#        print_speedup(speed_up)
-#
-#
-#    def test_medium_pow_512_16(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
-#        is_correct, speed_up = compute([dp_mat, 16], [nc_mat, 16], "pow")
-#        self.assertTrue(is_correct)
-#        print("test_medium_pow_512_16")
-#        print_speedup(speed_up)
-#
-#
-#    def test_medium_pow_1024_4(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
-#        is_correct, speed_up = compute([dp_mat, 4], [nc_mat, 4], "pow")
-#        self.assertTrue(is_correct)
-#        print("test_medium_pow_1024_4")
-#        print_speedup(speed_up)
-#
-#    def test_medium_pow_1024_8(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
-#        is_correct, speed_up = compute([dp_mat, 8], [nc_mat, 8], "pow")
-#        self.assertTrue(is_correct)
-#        print("test_medium_pow_1024_8")
-#        print_speedup(speed_up)
-#
-#
-#    def test_medium_pow_1024_16(self):
-#        # TODO: YOUR CODE HERE
-#        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
-#        is_correct, speed_up = compute([dp_mat, 16], [nc_mat, 16], "pow")
-#        self.assertTrue(is_correct)
-#        print("test_medium_pow_1024_16")
-#        print_speedup(speed_up)
+     def test_medium_pow_512_4(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
+        is_correct, speed_up = compute([dp_mat, 4], [nc_mat, 4], "pow")
+        self.assertTrue(is_correct)
+        print("test_medium_pow_512_4")
+        print_speedup(speed_up)
+
+    def test_medium_pow_512_8(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
+        is_correct, speed_up = compute([dp_mat, 8], [nc_mat, 8], "pow")
+        self.assertTrue(is_correct)
+        print("test_medium_pow_512_8")
+        print_speedup(speed_up)
+
+
+    def test_medium_pow_512_16(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(512, 512, seed=0)
+        is_correct, speed_up = compute([dp_mat, 16], [nc_mat, 16], "pow")
+        self.assertTrue(is_correct)
+        print("test_medium_pow_512_16")
+        print_speedup(speed_up)
+
+
+    def test_medium_pow_1024_4(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
+        is_correct, speed_up = compute([dp_mat, 4], [nc_mat, 4], "pow")
+        self.assertTrue(is_correct)
+        print("test_medium_pow_1024_4")
+        print_speedup(speed_up)
+
+    def test_medium_pow_1024_8(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
+        is_correct, speed_up = compute([dp_mat, 8], [nc_mat, 8], "pow")
+        self.assertTrue(is_correct)
+        print("test_medium_pow_1024_8")
+        print_speedup(speed_up)
+
+
+    def test_medium_pow_1024_16(self):
+        # TODO: YOUR CODE HERE
+        dp_mat, nc_mat = rand_dp_nc_matrix(1024, 1024, seed=0)
+        is_correct, speed_up = compute([dp_mat, 16], [nc_mat, 16], "pow")
+        self.assertTrue(is_correct)
+        print("test_medium_pow_1024_16")
+        print_speedup(speed_up)
 
 
 class TestGet(TestCase):
