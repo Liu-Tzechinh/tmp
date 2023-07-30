@@ -231,12 +231,13 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
   return 0;
 }
 
-void transpose(matrix *result, matrix *mat) {
+int tran_matrix(matrix *result, matrix *mat) {
   for (int i = 0; i < mat->rows; i++) {
     for (int j = 0; j < mat->cols; j++) {
       set(result, j, i, get(mat, i, j));
     }
   }
+  return 0;
 }
 
 /*

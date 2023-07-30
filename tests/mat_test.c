@@ -413,7 +413,7 @@ void pow_test_identity(void) {
   deallocate_matrix(mat);
 }
 
-void transpose_test(void) {
+void tran_test(void) {
   matrix *result = NULL;
   matrix *mat = NULL;
   CU_ASSERT_EQUAL(allocate_matrix(&result, 2, 2), 0);
@@ -422,12 +422,12 @@ void transpose_test(void) {
   set(mat, 0, 1, 2);
   set(mat, 1, 0, 3);
   set(mat, 1, 1, 4);
-  transpose_simd(result, mat);
+  tran_matrix(result, mat);
   CU_ASSERT_EQUAL(get(result, 0, 0), 1);
   CU_ASSERT_EQUAL(get(result, 0, 1), 3);
   CU_ASSERT_EQUAL(get(result, 1, 0), 2);
   CU_ASSERT_EQUAL(get(result, 1, 1), 4);
-  transpose_simd(mat, result);
+  tran_matrix(mat, result);
   CU_ASSERT_EQUAL(get(mat, 0, 0), 1);
   CU_ASSERT_EQUAL(get(mat, 0, 1), 2);
   CU_ASSERT_EQUAL(get(mat, 1, 0), 3);
@@ -444,14 +444,14 @@ void transpose_test(void) {
   set(mat, 1, 0, 4);
   set(mat, 1, 1, 5);
   set(mat, 1, 2, 6);
-  transpose(result, mat);
+  tran_matrix(result, mat);
   CU_ASSERT_EQUAL(get(result, 0, 0), 1);
   CU_ASSERT_EQUAL(get(result, 0, 1), 4);
   CU_ASSERT_EQUAL(get(result, 1, 0), 2);
   CU_ASSERT_EQUAL(get(result, 1, 1), 5);
   CU_ASSERT_EQUAL(get(result, 2, 0), 3);
   CU_ASSERT_EQUAL(get(result, 2, 1), 6);
-  transpose(mat, result);
+  tran_matrix(mat, result);
   CU_ASSERT_EQUAL(get(mat, 0, 0), 1);
   CU_ASSERT_EQUAL(get(mat, 0, 1), 2);
   CU_ASSERT_EQUAL(get(mat, 0, 2), 3);
@@ -498,7 +498,8 @@ int main (void)
         (CU_add_test(pSuite, "dealloc_null_test", dealloc_null_test) == NULL) ||
 	(CU_add_test(pSuite, "dealloc_slice_test", dealloc_slice_test) == NULL) ||
         (CU_add_test(pSuite, "get_test", get_test) == NULL) ||
-        (CU_add_test(pSuite, "fill_test", fill_test) == NULL)
+        (CU_add_test(pSuite, "fill_test", fill_test) == NULL) ||
+	(CU_add_test(pSuite, "tran_test", tran_test) == NULL) 
      )
    {
       CU_cleanup_registry();

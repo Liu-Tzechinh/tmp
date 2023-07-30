@@ -172,11 +172,10 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int offset, int rows, int co
 void fill_simd(matrix *mat, double val) {
   __m256d vals = _mm256_set1_pd(val);
   int n = size(mat);
-  int i = 0;
-  for (i; i < n / 4 * 4; i += 4) {
+  for (int i = 0; i < n / 4 * 4; i += 4) {
     _mm256_storeu_pd(mat->data+i, vals);
   }
-  for (i; i < n; i++) {
+  for (int i = n / 4 * 4; i < n; i++) {
     mat->data[i] = val;
   }
 }
@@ -194,15 +193,14 @@ void fill_matrix(matrix *mat, double val) {
 int abs_simd(matrix *result, matrix *mat) {
    __m256d _0 = _mm256_set1_pd(0);
    int n = size(mat);
-  int i = 0;
   __m256d vals1, vals2;
-  for (i; i < n / 4 * 4; i += 4) {
+  for (int i = 0; i < n / 4 * 4; i += 4) {
     vals1 = _mm256_loadu_pd(mat->data + i);
     vals2 = _mm256_sub_pd(_0, vals1);
     vals1 = _mm256_max_pd(vals1, vals2);
     _mm256_storeu_pd(result->data+i, vals1);
   }
-  for (i = n / 4 * 4; i < n; i++) {
+  for (int i = n / 4 * 4; i < n; i++) {
     result->data[i] = fabs(mat->data[i]);
   }
   return 0;
@@ -221,15 +219,14 @@ int abs_matrix(matrix *result, matrix *mat) {
 int neg_simd(matrix *result, matrix *mat) {
    __m256d _0 = _mm256_set1_pd(0);
    int n = size(mat);
-  int i = 0;
   __m256d vals1, vals2;
-  for (i; i < n / 4 * 4; i += 4) {
+  for (int i = 0; i < n / 4 * 4; i += 4) {
     vals1 = _mm256_loadu_pd(mat->data + i);
     vals2 = _mm256_sub_pd(_0, vals1);
     vals1 = _mm256_min_pd(vals1, vals2);
     _mm256_storeu_pd(result->data+i, vals1);
   }
-  for (i; i < n; i++) {
+  for (int i = n / 4 * 4; i < n; i++) {
     result->data[i] = -fabs(mat->data[i]);
   }
   return 0;
@@ -248,15 +245,14 @@ int neg_matrix(matrix *result, matrix *mat) {
 
 int add_simd(matrix *result, matrix *mat1, matrix *mat2) {
   int n = size(mat1);
-  int i = 0;
   __m256d vals1, vals2, sum;
-  for (i; i < n / 4 * 4; i += 4) {
+  for (int i = 0; i < n / 4 * 4; i += 4) {
     vals1 = _mm256_loadu_pd(mat1->data + i);
     vals2 = _mm256_loadu_pd(mat2->data + i);
     sum = _mm256_add_pd(vals1, vals2);
     _mm256_storeu_pd(result->data+i, sum);
   }
-  for (i; i < n; i++) {
+  for (int i = n / 4 * 4; i < n; i++) {
     result->data[i] = mat1->data[i] + mat2->data[i];
   }
   return 0;
@@ -277,15 +273,14 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 
 int sub_simd(matrix *result, matrix *mat1, matrix *mat2) {
   int n = size(mat1);
-  int i = 0;
   __m256d vals1, vals2, sub;
-  for (i; i < n / 4 * 4; i += 4) {
+  for (int i = 0; i < n / 4 * 4; i += 4) {
     vals1 = _mm256_loadu_pd(mat1->data + i);
     vals2 = _mm256_loadu_pd(mat2->data + i);
     sub = _mm256_sub_pd(vals1, vals2);
     _mm256_storeu_pd(result->data+i, sub);
   }
-  for (i; i < n; i++) {
+  for (int i = n / 4 * 4; i < n; i++) {
     result->data[i] = mat1->data[i] + mat2->data[i];
   }
   return 0;
@@ -302,7 +297,7 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
   return sub_simd(result, mat1, mat2);
 }
 
-void transpose_simd(matrix *result, matrix *mat) {
+int tran_simd(matrix *result, matrix *mat) {
   double e1, e2, e3, e4;
   int n = size(result);
   int rows = mat->rows;
@@ -310,8 +305,7 @@ void transpose_simd(matrix *result, matrix *mat) {
   int row = -1;
   int col = -1;
   __m256d val = _mm256_set1_pd(0);
-  int k = 0;
-  for (k; k < n / 4 * 4; k += 4) {
+  for (int k = 0; k < n / 4 * 4; k += 4) {
     row = (row + 1) % rows;
     if (!row) { 
       col++;
@@ -335,17 +329,23 @@ void transpose_simd(matrix *result, matrix *mat) {
     val = _mm256_set_pd(e1, e2, e3, e4);
     _mm256_storeu_pd(result->data + k, val);
   }
-  for (k; k < n; k++) {
+  for (int k = n / 4 * 4; k < n; k++) {
     row = (row + 1) % rows;
     if (!row) {
       col++;
     }
     result->data[k] = mat->data[row * cols + col];
   }
+  return 0;
 }
 
-void transpose(matrix *result, matrix *mat) {
-  transpose_simd(result, mat);
+int tran_matrix(matrix *result, matrix *mat) {
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      set(result, j, i, get(mat, i, j));
+    }
+  }
+  return 0;
 }
 
 int mul_simd(matrix *result, matrix *mat1, matrix *mat2) {
@@ -354,7 +354,7 @@ int mul_simd(matrix *result, matrix *mat1, matrix *mat2) {
   if (allocate_matrix(&tmp, mat2->cols, mat2->rows)) {
     return -1;
   }
-  transpose_simd(tmp, mat2);
+  tran_matrix(tmp, mat2);
 
   __m256d vals1, vals2, vals3;
   int j;
