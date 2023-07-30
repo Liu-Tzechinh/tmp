@@ -8,8 +8,9 @@
  * optimization 0: naive no function call -> _nnfd
  * optimization 1: no function call and no index compute -> nfd
  * optimization 2: _simd
+ * optimization 3: openMp bsed on nfd or nnfd
  */
-#define OPTION 0
+#define OPTION 2
 
 // Include SSE intrinsics
 #if defined(_MSC_VER)
@@ -185,6 +186,14 @@ void fill_nfd(matrix *mat, double val) {
   }
 }
 
+void fill_nfd_mp(matrix *mat, double val) {
+  int n = size(mat);
+  #pragma omp parallel for
+  for (int i = 0; i < n; i++) {
+    mat->data[i] = val;
+  }
+}
+
 void fill_simd(matrix *mat, double val) {
   __m256d vals = _mm256_set1_pd(val);
   int n = size(mat);
@@ -224,6 +233,15 @@ int abs_nfd(matrix *result, matrix *mat) {
   return 0;
 }
 
+int abs_nfd_mp(matrix *result, matrix *mat) {
+  int n = size(mat);
+  #pragma omp parallel for
+  for (int i = 0; i < n; i++) {
+    result->data[i] = fabs(mat->data[i]);
+  }
+  return 0;
+}
+
 int abs_simd(matrix *result, matrix *mat) {
    __m256d _0 = _mm256_set1_pd(0);
    int n = size(mat);
@@ -254,6 +272,8 @@ int abs_matrix(matrix *result, matrix *mat) {
     return abs_nfd(result, mat);
   case 2:
     return abs_simd(result, mat);
+  case 3:
+    return abs_nfd_mp(result, mat);
   }
 }
 
@@ -265,14 +285,24 @@ int neg_nnfd(matrix *result, matrix *mat) {
       result->data[index] = -fabs(mat->data[index]);
     }
   }
+  return 0;
 }
 
 int neg_nfd(matrix *result, matrix *mat) {
   int n = size(mat);
   for (int i = 0; i < n; i++) {
     result->data[i] = -fabs(mat->data[i]);
-    }
   }
+  return 0;
+}
+
+int neg_nfd(matrix *result, matrix *mat) {
+  int n = size(mat);
+#pragma omp parallel for
+  for (int i = 0; i < n; i++) {
+    result->data[i] = -fabs(mat->data[i]);
+  }
+  return 0;
 }
 
 
@@ -307,6 +337,8 @@ int neg_matrix(matrix *result, matrix *mat) {
     return neg_nfd(result, mat);
   case 2:
     return neg_simd(result, mat);
+  case 3:
+    return neg_nfd_mp(result, mat);
   }
 }
 
@@ -329,6 +361,15 @@ int add_nfd(matrix *result, matrix *mat1, matrix *mat2) {
   return 0;
 }
 
+int add_nfd_mp(matrix *result, matrix *mat1, matrix *mat2) {
+  int n = size(mat1);
+  #pragma omp parallel for 
+  for (int i = 0; i < n; i++) {
+    result->data[i] = mat1->data[i] + mat2->data[i];
+  }
+  return 0;
+}
+
 int add_simd(matrix *result, matrix *mat1, matrix *mat2) {
   int n = size(mat1);
   __m256d vals1, vals2, sum;
@@ -339,15 +380,6 @@ int add_simd(matrix *result, matrix *mat1, matrix *mat2) {
     _mm256_storeu_pd(result->data+i, sum);
   }
   for (int i = n / 4 * 4; i < n; i++) {
-    result->data[i] = mat1->data[i] + mat2->data[i];
-  }
-  return 0;
-}
-
-int add_nfd_mp(matrix *result, matrix *mat1, matrix *mat2) {
-  int n = size(mat1);
-  #pragma omp parallel for
-  for (int i = 0; i < n; i++) {
     result->data[i] = mat1->data[i] + mat2->data[i];
   }
   return 0;
@@ -384,6 +416,8 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     return add_nfd(result, mat1, mat2);
   case 2:
     return add_simd(result, mat1, mat2);
+  case 3:
+    return add_nfd_mp(result, mat1, mat2);
   }
 }
 
@@ -402,6 +436,16 @@ int sub_nnfd(matrix *result, matrix *mat1, matrix *mat2) {
 int sub_nfd(matrix *result, matrix *mat1, matrix *mat2) {
   // Task 1.5 TODO
   int n = size(result);
+  for (int i = 0; i < n; i++) {
+    result->data[i] = mat1->data[i] - mat2->data[i];
+  }
+  return 0;
+}
+
+int sub_nfd_mp(matrix *result, matrix *mat1, matrix *mat2) {
+  // Task 1.5 TODO
+  int n = size(result);
+  #pragma omp parallel for 
   for (int i = 0; i < n; i++) {
     result->data[i] = mat1->data[i] - mat2->data[i];
   }
@@ -439,11 +483,12 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     return sub_nfd(result, mat1, mat2);
   case 2:
     return sub_simd(result, mat1, mat2);
+  case 3:
+    return sub_nfd_mp(result, mat1, mat2);
   }
 }
 
 int tran_nnfd(matrix *result, matrix *mat) {
-  int index;
   for (int i = 0; i < mat->rows; i++) {
     for (int j = 0; j < mat->cols; j++) {
       result->data[j * result->cols + i] = mat->data[i * mat->cols + j];
@@ -451,6 +496,19 @@ int tran_nnfd(matrix *result, matrix *mat) {
   }
   return 0;
 }
+
+
+int tran_nnfd_mp(matrix *result, matrix *mat) {
+  #pragma omp parallel for
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      result->data[j * result->cols + i] = mat->data[i * mat->cols + j];
+    }
+  }
+  return 0;
+}
+
+
 
 
 int tran_simd(matrix *result, matrix *mat) {
@@ -498,11 +556,13 @@ int tran_simd(matrix *result, matrix *mat) {
 int tran_matrix(matrix *result, matrix *mat) {
   switch(OPTION) {
   case 0:
-    return tran_nnfd(result, mat1, mat2);
+    return tran_nnfd(result, mat);
   case 1:
-    return tran_nfd(result, mat1, mat2);
+    return tran_nnfd(result, mat);
   case 2:
-    return tran_simd(result, mat1, mat2);
+    return tran_simd(result, mat);
+  case 3:
+    return tran_nnfd(result, mat);
   }
 }
 
@@ -514,11 +574,27 @@ int mul_nnfd(matrix *result, matrix *mat1, matrix *mat2) {
       for (int j = 0; j < mat1->cols; j++) {
 	sum += (mat1->data[i * mat1->cols + j] * mat2->data[j * mat2->cols + k]);
       }
-      result->data[i $ result->cols + k] = sum;
+      result->data[i * result->cols + k] = sum;
     }
   }
   return 0;
 }
+
+int mul_nnfd_mp(matrix *result, matrix *mat1, matrix *mat2) {
+  // Task 1.6 TODO
+#pragma omp parallel for
+  for (int i = 0; i < mat1->rows; i++) {
+    for (int k = 0; k < mat2->cols; k++) {
+      double sum = 0;
+      for (int j = 0; j < mat1->cols; j++) {
+	sum += (mat1->data[i * mat1->cols + j] * mat2->data[j * mat2->cols + k]);
+      }
+      result->data[i * result->cols + k] = sum;
+    }
+  }
+  return 0;
+}
+
 
 int mul_simd(matrix *result, matrix *mat1, matrix *mat2) {
   // transpose mat2
@@ -539,9 +615,10 @@ int mul_simd(matrix *result, matrix *mat1, matrix *mat2) {
 	vals3 = _mm256_fmadd_pd(vals1, vals2, vals3);
       }
       _mm256_storeu_pd(sum_array, vals3);
-      result->data[i * mat2->cols + k] = sum_array[0] + sum_array[1] + sum_array[2] + sum_array[3];
+      int index = i * mat2->cols + k;
+      result->data[index] = sum_array[0] + sum_array[1] + sum_array[2] + sum_array[3];
       for (int j = mat1->cols / 4 * 4; j < mat1->cols; j++) {
-	result->data[i * mat2->cols + k] += (mat1->data[i * mat1->cols + j] * tmp->data[k * tmp->cols + j]);
+	result->data[index] += (mat1->data[i * mat1->cols + j] * tmp->data[k * tmp->cols + j]);
       }
     }
   }
@@ -563,6 +640,8 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     return mul_nnfd(result, mat1, mat2);
   case 2:
     return mul_simd(result, mat1, mat2);
+  case 3:
+    return mul_nnfd_mp(result, mat1, mat2);
   }
 }
 
@@ -576,6 +655,7 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 int pow_matrix(matrix *result, matrix *mat, int pow) {
   // Task 1.6 TODO
   double value = 0;
+  #pragma omp parallel for
   for (int i = 0; i < mat->rows; i++) {
     for (int j = 0; j < mat->cols; j++) {
       if (i == j) {
@@ -583,16 +663,17 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
       } else {
 	value = 0;
       }
-      set(result, i, j, value);
+      result->data[i * result->cols + j] = value;
     }
   }
+  
   matrix *tmp;
   allocate_matrix(&tmp, mat->rows, mat->cols);
   for (int k = 0; k < pow; k++) {
     mul_matrix(tmp, result, mat);
     for (int i = 0; i < mat->rows; i++) {
       for (int j = 0; j < mat->cols; j++) {
-	set(result, i, j, get(tmp, i, j));
+	result->data[i * result->cols + j] = tmp->data[i * tmp->cols = j];
       }
     }
   }

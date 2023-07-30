@@ -997,7 +997,7 @@ class TestSlice(TestCase):
         self.assertTrue(cmp_dp_nc_matrix(dp_mat[rand_row_1], nc_mat[rand_row_1]))
         self.assertTrue(cmp_dp_nc_matrix(dp_mat[rand_row_2], nc_mat[rand_row_2]))
 
-    def test_slice_large(self):
+    def test_slice_large(self):
         # TODO: YOUR CODE HERE
         dp_mat, nc_mat = rand_dp_nc_matrix(2, 2, seed=0)
         rand_row_1 = np.random.randint(dp_mat.shape[0])
