@@ -391,7 +391,7 @@ void fill_test(void) {
 }
 
 void pow_test_identity(void) {
-   matrix *result = NULL;
+  matrix *result = NULL;
   matrix *mat = NULL;
   CU_ASSERT_EQUAL(allocate_matrix(&result, 2, 2), 0);
   CU_ASSERT_EQUAL(allocate_matrix(&mat, 2, 2), 0);
@@ -409,6 +409,55 @@ void pow_test_identity(void) {
   CU_ASSERT_EQUAL(get(result, 0, 1), 2);
   CU_ASSERT_EQUAL(get(result, 1, 0), 3);
   CU_ASSERT_EQUAL(get(result, 1, 1), 4);
+  deallocate_matrix(result);
+  deallocate_matrix(mat);
+}
+
+void transpose_test(void) {
+  matrix *result = NULL;
+  matrix *mat = NULL;
+  CU_ASSERT_EQUAL(allocate_matrix(&result, 2, 2), 0);
+  CU_ASSERT_EQUAL(allocate_matrix(&mat, 2, 2), 0);
+  set(mat, 0, 0, 1);
+  set(mat, 0, 1, 2);
+  set(mat, 1, 0, 3);
+  set(mat, 1, 1, 4);
+  transpose_simd(result, mat);
+  CU_ASSERT_EQUAL(get(result, 0, 0), 1);
+  CU_ASSERT_EQUAL(get(result, 0, 1), 3);
+  CU_ASSERT_EQUAL(get(result, 1, 0), 2);
+  CU_ASSERT_EQUAL(get(result, 1, 1), 4);
+  transpose_simd(mat, result);
+  CU_ASSERT_EQUAL(get(mat, 0, 0), 1);
+  CU_ASSERT_EQUAL(get(mat, 0, 1), 2);
+  CU_ASSERT_EQUAL(get(mat, 1, 0), 3);
+  CU_ASSERT_EQUAL(get(mat, 1, 1), 4);
+  deallocate_matrix(result);
+  deallocate_matrix(mat);
+
+
+  CU_ASSERT_EQUAL(allocate_matrix(&result, 3, 2), 0);
+  CU_ASSERT_EQUAL(allocate_matrix(&mat, 2, 3), 0);
+  set(mat, 0, 0, 1);
+  set(mat, 0, 1, 2);
+  set(mat, 0, 2, 3);
+  set(mat, 1, 0, 4);
+  set(mat, 1, 1, 5);
+  set(mat, 1, 2, 6);
+  transpose(result, mat);
+  CU_ASSERT_EQUAL(get(result, 0, 0), 1);
+  CU_ASSERT_EQUAL(get(result, 0, 1), 4);
+  CU_ASSERT_EQUAL(get(result, 1, 0), 2);
+  CU_ASSERT_EQUAL(get(result, 1, 1), 5);
+  CU_ASSERT_EQUAL(get(result, 2, 0), 3);
+  CU_ASSERT_EQUAL(get(result, 2, 1), 6);
+  transpose(mat, result);
+  CU_ASSERT_EQUAL(get(mat, 0, 0), 1);
+  CU_ASSERT_EQUAL(get(mat, 0, 1), 2);
+  CU_ASSERT_EQUAL(get(mat, 0, 2), 3);
+  CU_ASSERT_EQUAL(get(mat, 1, 0), 4);
+  CU_ASSERT_EQUAL(get(mat, 1, 1), 5);
+  CU_ASSERT_EQUAL(get(mat, 1, 2), 6);
   deallocate_matrix(result);
   deallocate_matrix(mat);
 }

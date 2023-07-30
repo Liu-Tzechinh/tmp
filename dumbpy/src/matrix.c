@@ -15,9 +15,12 @@ double rand_double(double low, double high) {
 /* Generates a random matrix */
 void rand_matrix(matrix *result, unsigned int seed, double low, double high) {
     srand(seed);
-    for (int i = 0; i < result->rows; i++) {
-        for (int j = 0; j < result->cols; j++) {
-            set(result, i, j, rand_double(low, high));
+    int rows = result->rows;
+    int cols = result->cols;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+	  //            set(result, i, j, rand_double(low, high));
+	  result->data[i * cols + j] = rand_double(low, high);
         }
     }
 }
@@ -226,6 +229,14 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     }
   }
   return 0;
+}
+
+void transpose(matrix *result, matrix *mat) {
+  for (int i = 0; i < mat->rows; i++) {
+    for (int j = 0; j < mat->cols; j++) {
+      set(result, j, i, get(mat, i, j));
+    }
+  }
 }
 
 /*

@@ -511,7 +511,7 @@ static PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optiona
     PyErr_SetString(PyExc_RuntimeError, "Failed to allocate matrix");
     return NULL;
   }
-  int pow_result = pow_matrix(new_mat, self->mat, pow_c);
+  int pow_result = pow_matrix(new_mat, self->mat, pow_c);
   return op_err(new_mat, pow_result);
 }
 

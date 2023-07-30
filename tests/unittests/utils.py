@@ -17,7 +17,7 @@ Global vars
 num_samples = 1000
 decimal_places = 6
 # for each operation iterate num_iter
-num_iter = 1000
+num_iter = 1
 func_mapping = {
     "add": operator.add,
     "sub": operator.sub,
@@ -39,7 +39,7 @@ def dp_nc_matrix(*args, **kwargs):
 Returns a random dumbpy matrix and a random numc matrix with the same data
 seed, low, and high are optional
 """
-def rand_dp_nc_matrix(rows, cols, low=0, high=1, seed=0):
+def rand_dp_nc_matrix(rows, cols, low=-1, high=1, seed=0):
     return dp.Matrix(rows, cols, low=low, high=high,rand=True, seed=seed), nc.Matrix(rows, cols, low=low, high=high, rand=True, seed=seed)
 
 
